@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Desc_Selector</title>
+    <meta name="description" content="Desc_Selector">
+    <style>
+        h1 {
+            color: coral;
+            background-color: yellowgreen;
+        }
+        ul {
+            color: blue;
+            background-color: aquamarine;
+        }
+        body li ul {
+            background-color: yellow;
+        }
+        #main-menu a {
+            color: darkred;
+        }
+        #sub-menu a {
+            color: deepskyblue;
+        }
+        #sub-menu li > a {
+            text-decoration: none;
+            background-color: tomato;
+        }
+        li#main-menu + li {
+            background-color: darkorchid;
+        }
+        li#main-menu + li > a {
+            color: aqua;
+            text-decoration: none;
+        }
+        h2 + p {
+            background-color: lightblue;
+        }
+        h2 ~ p {
+            color: darkmagenta;
+        }
+        /* 상위 태그들을 동해 선택자를 지정 할 수 있다 = descendent selector. 태그옆에 id를 표기해 줌으로써 정교해 질 수 있다.
+        descendent selector :  조상 자손 순 
+        child selector : 부모 > 자식 
+        인접한 sibilings selector : 기준 + 인접한 같은 레벨의 태그
+        모든 sibilings selector : 기준 ~ 인접한 같은 레벨의 태그 */
+    </style>
+</head>
+<body>
+    <h1>Descendent Selector</h1>
+    <nav>
+        <ul>
+            <li id="main-menu">
+                <a href="#">menu1</a>
+                <ul id="sub-menu">
+                    <li><a href="#">sub-menu</a></li>
+                    <li><a href="#">sub-menu</a></li>
+                </ul>
+            </li>
+            <li><a href="#">menu2</a></li>
+            <li><a href="#">menu3</a></li>
+        </ul>
+    </nav>
+    <h2>Sibilings Selector</h2>
+    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Minima, non! Qui unde vel voluptatem incidunt provident amet eveniet sint perspiciatis ut doloremque voluptas libero omnis, atque nulla. Inventore, facere alias!</p>
+    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Minima, non! Qui unde vel voluptatem incidunt provident amet eveniet sint perspiciatis ut doloremque voluptas libero omnis, atque nulla. Inventore, facere alias!</p>
+    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Minima, non! Qui unde vel voluptatem incidunt provident amet eveniet sint perspiciatis ut doloremque voluptas libero omnis, atque nulla. Inventore, facere alias!</p>
+</body>
+</html>

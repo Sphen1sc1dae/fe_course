@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pseudo Selector</title>
+    <meta name="description" content="Pseudo Selector">
+    <style>
+        h1::before {
+            content: "h1태그 앞에 추가되는 내용";
+            color: coral;
+        }
+        h1::after {
+            content: "h1태그 뒤에 추가되는 내용";
+            color: blueviolet;
+        }
+        a:hover {
+            text-decoration: none;
+        }
+        /* hover : a 태그에 마우스를 올린 상태 */
+        /* h1 앞에 content에 해당하는 내용 추가 */
+        a.naver:hover {
+            color: chocolate;
+        }
+        a.google:hover {
+            color: dodgerblue;
+        }
+        a.youtube:hover {
+            color: grey;
+        }
+
+        a.naver:active {
+            color: lawngreen;
+        }
+        a.naver:visited {
+            color: lightslategrey;
+        }
+
+        input { outline: none;}
+        input:focus {
+            background-color: hotpink;
+            border: 1px solid red;
+            border-radius: 4px;
+        }
+
+        ul.menus li:first-child, ul.menus li:nth-child(3), ul.menus li:last-child {
+            background-color: darkviolet;
+        }
+        ul.menus li:nth-child(1) a, ul.menus li:nth-child(5) a {
+            color: aliceblue;
+        }
+
+        div p:nth-child(2n) /* 짝수 (2n, even) */ {
+            background-color: darkcyan;
+        }
+        div p:nth-child(odd) /* 홀수 (2n+1, odd) */ {
+            background-color: darksalmon;
+        }
+        table tr:nth-child(odd) {
+            background-color: darkturquoise;
+        }
+        table tr:first-child {
+            background-color: burlywood;
+        }
+        /* nth-childe 에서 nth = N 번째(th) 를 의미함. */
+
+        input:checked + span {
+            background-color: deeppink;
+        }
+        input:disabled {
+            background-color: bisque;
+        }
+
+        /* :not(선택자) = 부정 선택자 */
+        div *:not(p:nth-child(3)) {
+            color: brown;
+        }
+    </style>
+</head>
+<body>
+    <h1>Pseudo Selector</h1>
+    <p>
+        <a href="http://www.naver.com" class = "naver" target="_blank">Naver</a>
+        <a href="http://www.google.com" class = "google" target="_self">Google</a>
+        <a href="http://www.youtube.com" class = "youtube" target="_blank">Youtube</a>
+    </p>
+    <form action="">
+        <ul>
+            <li>
+                <label for="name">이름</label>
+                <input type="text" name="name" id="name" value="Lee" disabled>
+            </li>
+            <li>
+                <label for="address">주소</label>
+                <input type="text" name="address" id="address">
+            </li>
+            <li>
+                <label for="hobby">취미를 선택해주세요</label>
+                <input type="checkbox" name="hobby" value="game" checked><span>게임하기</span>
+                <input type="checkbox" name="hobby" value="music"><span>음악듣기</span>
+            </li>
+            <li>
+                <label for="menu">메뉴를 선택해주세요</label>
+                <input type="radio" name="menu" value="coffee"><span>커피</span>
+                <input type="radio" name="menu" value="milk" checked><span>우유</span>
+            </li>
+            <li>
+                <button disabled>전송하기</button>
+            </li>
+        </ul>
+    </form>
+    <hr>
+    <h1>Pseudo Selector - 수열</h1>
+    <ul class="menus">
+        <li><a href="#">menu1</a></li>
+        <li><a href="#">menu1</a></li>
+        <li><a href="#">menu1</a></li>
+        <li><a href="#">menu1</a></li>
+        <li><a href="#">menu1</a></li>
+    </ul>
+    <div>
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Mollitia quam velit neque laboriosam quos, nihil numquam accusamus quia voluptatum modi aspernatur fuga at corrupti nemo perferendis amet quo nobis? Sunt.</p>
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Mollitia quam velit neque laboriosam quos, nihil numquam accusamus quia voluptatum modi aspernatur fuga at corrupti nemo perferendis amet quo nobis? Sunt.</p>
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Mollitia quam velit neque laboriosam quos, nihil numquam accusamus quia voluptatum modi aspernatur fuga at corrupti nemo perferendis amet quo nobis? Sunt.</p>
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Mollitia quam velit neque laboriosam quos, nihil numquam accusamus quia voluptatum modi aspernatur fuga at corrupti nemo perferendis amet quo nobis? Sunt.</p>
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Mollitia quam velit neque laboriosam quos, nihil numquam accusamus quia voluptatum modi aspernatur fuga at corrupti nemo perferendis amet quo nobis? Sunt.</p>
+    </div>
+    <table>
+        <tr>
+            <th>번호</th>
+            <th>상품명</th>
+            <th>가격</th>
+            <th>비고</th>
+        </tr>
+        <tr>
+            <td> 1</td>
+            <td>키보드</td>
+            <td>10,000</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td> 1</td>
+            <td>키보드</td>
+            <td>10,000</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td> 1</td>
+            <td>키보드</td>
+            <td>10,000</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td> 1</td>
+            <td>키보드</td>
+            <td>10,000</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td> 1</td>
+            <td>키보드</td>
+            <td>10,000</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td> 1</td>
+            <td>키보드</td>
+            <td>10,000</td>
+            <td></td>
+        </tr>
+    </table>
+</body>
+</html>

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Attribute Selector</title>
+    <meta name="description" content="Attribute Selector">
+    <style>
+        a[href="http://www.naver.com"] {
+            color: cadetblue;
+            text-decoration: none;
+        }
+        a[target="_self"] {
+            color: darkgoldenrod;
+            font-size: 50px;
+        }
+        a[target="_blank"] {
+            background-color: cyan;
+            font-size: 100px;
+        }
+    a[class^="inner"] {
+        background-color: darkcyan;
+        /* ^= : inner 로 시작하는 모든 class 속성을 대상으로 함. */
+    }
+    a[href="#"] {
+        color: red; text-decoration: none; font-size: 80;
+    }
+    </style>
+</head>
+<body>
+    <h1>Attribute Selector</h1>
+    <a href="#" class="inner_1">Test1</a>
+    <a href="http://www.naver.com" target="_blank">Naver</a>
+    <a href="http://www.google.com" target="_self">Google</a>
+    <a href="http://www.youtube.com" target="_blank">Youtube</a>
+    <a href="#" class="inner_2">Test2</a>
+</body>
+</html>
