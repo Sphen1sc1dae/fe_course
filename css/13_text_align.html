@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Text Align">
+    <title>Text Align</title>
+    <style>
+        p {background-color: aquamarine;}
+        span { background-color: yellow;}
+        div {border: 1px solid red;}
+        .b-left {text-align: left; word-spacing: 50px; line-height: 50px; text-indent: 50px; margin-left: 100px;}
+        .b-right {text-align: right;}
+        .b-center {text-align: center;}
+        .i-left {text-align: left; word-spacing: 50px; line-height: 50px; border: 1px solid blue; text-indent: 50px;}
+        /* inline level 에서는 text-indent 적용 안된다. */
+        .i-right {text-align: right;}
+        .i-center {text-align: center;}
+        .d {text-align: center;}
+        img{width: 100px; height: 100px;}
+        .imgbl {
+            text-align: center;
+            word-spacing: 50px;
+        }
+        .b-justify {
+            width: 300px;
+            background-color: chartreuse;
+            text-align: justify;
+            /* text-transform: uppercase; 대소문자 변형 */
+        }
+    </style>
+</head>
+<body>
+    <h1>Text Align</h1>
+    <h3>Block_level</h3>
+    <p class="b-left">text align :: left</p>
+    <p class="b-right">text align :: right</p>
+    <p class="b-center">text align :: center</p>
+    <p class="b-justify">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Asperiores illo ullam adipisci magni explicabo deserunt perspiciatis pariatur enim consequuntur fugit quas repellendus aperiam repellat possimus dolorem, eligendi sequi hic exercitationem!</p>
+    
+    <h3>Inline-level</h3>
+    <div class="d"><span class="i-left">text align :: left</span>
+    <span class="i-right">text align :: right</span>
+    <span class="i-center">text align :: center</span>
+    <button>Please Click here</button>
+    </div>
+    <hr>
+    <span class="i-left">text align :: left</span>
+    <span class="i-right">text align :: right</span>
+    <span class="i-center">text align :: center</span>
+    
+    <h3>Inline-Block-Level</h3>
+    <div class="imgbl">
+        <img src="../images/img01_seo.png" alt="img">
+        <img src="../images/img01_seo.png" alt="img">
+        <img src="../images/img01_seo.png" alt="img">
+        <img src="../images/img01_seo.png" alt="img">
+        <img src="../images/img01_seo.png" alt="img">
+    </div>
+</body>
+</html>
