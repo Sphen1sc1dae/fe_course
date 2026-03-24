@@ -9,12 +9,11 @@ const apple = {
     n : "apple"
 }
 
-console.log(person);
-console.log(apple);
-
 setValue(person, 'address', '서울시 강남구');
 setValue(person, 'job', 'SW 엔지니어');
 setValue(apple, 'emj', '🍎');
+console.log(person);
+console.log(apple);
 
 console.log(getValue(person, 'n'));
 // let na = getValue(person, 'n');

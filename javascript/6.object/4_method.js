@@ -1,4 +1,7 @@
-// 생성자 함수(Constructor Function)
+/**
+ * 객체를 생성하는 함수 : 생성자 함수(Constructor Function)
+ * 객체의 메소드 정의 : 객체안에 함수형식으로 정의
+ */
 const fruit = {
     name : 'apple',
     emojis : '🍎',

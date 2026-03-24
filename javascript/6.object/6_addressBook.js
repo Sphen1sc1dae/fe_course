@@ -35,9 +35,3 @@ deleteValue(hong, 'address');
 deleteObject('hong');
 
 console.log(addressBook);
-
-// createObject('hong');
-// createObject('smith');
-// createObject('lee');
-// createObject('james');
-// createObject('kim');

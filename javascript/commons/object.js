@@ -17,7 +17,7 @@ export function getObject(objectName) { // 객체 삭제
 }
 
 export function setObject(key, value) {
-    return objects[key] = value;
+    objects[key] = value;
 }
 
 // -----------------------------------------------

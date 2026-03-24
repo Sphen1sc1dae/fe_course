@@ -1,3 +1,11 @@
+/**
+ * object : 
+ * - {}, 다양한 데이터 타입을 저장
+ * - object literal, { property(key) : value } 
+ * - JSON(JavaScript Object Notation)에서는 property(key)를 반드시 문자열로 정의
+ */
+
+// 학생의 성적을 관리하는 객체 생성, Object Literal
 const hong = {
     n : '홍길동',
     age : 30
