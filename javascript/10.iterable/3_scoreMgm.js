@@ -26,3 +26,4 @@ console.log(`searchScore :: `, searchScore(scoreList, 'kor', 90));
 // 영어 점수가 98점 이상인 학생 검색
 console.log(`searchScore :: `, searchScore(scoreList, 'eng', 98));
 // 모든 학생의 수학점수 +5
+console.log('updateScore :: ', updateScore(scoreList, 'math', 5));
