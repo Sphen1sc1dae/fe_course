@@ -4,12 +4,16 @@ window.addEventListener('DOMContentLoaded', () => {
 });
 
 // getJson 함수 생성
-const data_url = 'http://127.0.0.1:5501/javascript/13.asynchronous/7_employees.json'
+const data_url = 'http://127.0.0.1:5501/javascript/13.asynchronous/employees.json'
 
 const getJson = async () => {
     let response = await fetch(data_url);
     return response.json();
 }
+// async function getJson() { -> 표현식 차이
+//     let response = await fetch(data_url);
+//     return response.json();
+// }
 
 // show 함수 생성
 const show = async() => {

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KOBIS</title>
+    <script src="2_kobis.js"></script>
+    <link rel="stylesheet" href="2_modal.css">
+</head>
+<body>
+    <h1>KOBIS BOX OFFICE</h1>
+    <h3>박스오피스 : 
+        <select name="type" id="type">
+            <option value="default">선택</option>
+            <option value="Daily">일별</option>
+            <option value="Weekly">주간/주말</option>
+        </select>
+    </h3>
+    <h3>Select Date : <input type='date' id="sdate"><button type="button" onclick="handleBoxOffice()">RUN</button></h3>
+    <div id="content"></div>
+
+    <div id="modal" style="display:none">
+        <div id="modal-content">
+            <span id="modal-close">X</span>
+            <div id="modal-body"></div>
+        </div>
+    </div>
+</body>
+</html>
