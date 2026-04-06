@@ -15,21 +15,41 @@ window.addEventListener('DOMContentLoaded', () => {
 
         }
     })
-    
     // 테이블 생성 함수
-    creatTable();
+    // createTable();
+    filterMenu('all'); // 맨 처음 호출되는 테이블
 
 }) // window event
+
+// filterMenu 함수를 생성
+async function filterMenu(type) {
+    console.log(type);
+    let filterList = null;
+    if(type === 'all') {
+        // createTable();
+        filterList = await getJson();
+    } else {
+        filterList = await filterData(type);
+    }
+    // return filterList;
+    createTable(filterList);
+}
+
+// filterData 함수 생성
+async function filterData(type) {
+    let data = await getJson();
+    // console.log('data => ', data);
+    return data.filter(item => item.type === type);
+}
 
 async function getJson() {
     let response = await fetch("../data/support.json");
     return response.json();
 }
 
-async function creatTable() {
-    let list = await getJson();
+async function createTable(list) {
     let output = `
-        <table>
+        <table id = 'stable'>
             <thead>
                 <tr>
                     <th>번호</th>
@@ -60,5 +80,6 @@ async function creatTable() {
         </table>
     `;
 
+    document.querySelector('#stable')?.remove();
     document.querySelector('#before-table').insertAdjacentHTML('afterEnd', output);
 }
