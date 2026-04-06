@@ -71,6 +71,12 @@ async function getJson() {
 }
 
 async function createTable(list) {
+    // 1. 검색 건수 동적 업데이트 (추가된 로직)
+    // #before-table 아이디를 가진 요소의 텍스트를 데이터 길이에 맞춰 변경합니다.
+    const countElement = document.querySelector('#before-table');
+    if (countElement) {
+        countElement.textContent = `총 ${list.length}건이 검색되었습니다.`;
+    }
     let output = `
         <table id = 'stable'>
             <thead>
