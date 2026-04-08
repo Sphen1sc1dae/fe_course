@@ -5,8 +5,8 @@ export default function AvatarList({ list }) {
     return (
         <div className={style.avatar_list}>
             {
-                list.map(item => 
-                    <Avatar img={item.img} name={item.name}/>)
+                list.map((item, idx) => 
+                    <Avatar img={item.img} name={item.name} key={idx}/>)
             }
         </div>
     )
