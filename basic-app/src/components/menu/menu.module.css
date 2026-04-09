@@ -1,14 +1,19 @@
+.menu_list {
+    display: flex;
+    list-style-type: none;
+    align-items: center;
+}
 .menu1 {
     border: 1px solid gray;
     padding: 5px 10px;
     text-decoration: none;
-    background-color: indianred;
+    background-color: antiquewhite;
     color: #000;
 }
 .menu2 {
-    border: 1px solid red;
+    border: 1px solid gray;
     padding: 5px 10px;
     text-decoration: none;
     background-color: tomato;
-    column-rule: #fff;
+    color: #fff;
 }

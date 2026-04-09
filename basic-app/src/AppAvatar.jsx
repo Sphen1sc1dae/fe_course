@@ -3,7 +3,6 @@ import AvatarImageList from "./components/avatar/AvatarImageList.jsx"
 import Avatar from "./components/avatar/Avatar.jsx"
 import AvatarList from "./components/avatar/AvatarList.jsx"
 import style from './components/avatar/Avatar.module.css';
-import MenuList from './components/menu/MenuList.jsx';
 import mstyle from './components/menu/Menu.module.css';
 import people1 from './assets/people1.webp';
 import people2 from './assets/people2.webp';
@@ -16,24 +15,27 @@ export default function App() {
     {img: people3, style:style.avatar_img_circle},
     {img: people3, style:style.avatar_img}
   ]
+  const list2 = [
+    { img: "https://cf.lottecinema.co.kr//Media/Event/7cfa9127420c4e47b4d2a56f736561c3.jpg", 
+      style:style.avatar_img_circle},
+    { img: "https://cf.lottecinema.co.kr//Media/Event/7cfa9127420c4e47b4d2a56f736561c3.jpg", 
+      style:style.avatar_img_circle},
+    { img: "https://cf.lottecinema.co.kr//Media/Event/7cfa9127420c4e47b4d2a56f736561c3.jpg", 
+      style:style.avatar_img_circle}
+  ]
   const alist = [
     {img: people1, name: "Smith" },
     {img: people2, name: "James"},
     {img: people3, name: "Anne"},
     {img: people3, name: "Anne"}
   ]
-  const mlist = [
-    {title: "멤버십", href: "#", style: mstyle.menu1},
-    {title: "고객센터", href: "#", style: mstyle.menu1},
-    {title: "단체관람/대관문의", href: "#", style: mstyle.menu1},
-    {title: "로그인", href: "#", style: mstyle.menu1},
-  ]
-
+  
   return ( 
     <>
       <AvatarImage img={people1} style={style.avatar_img}/>
       <Avatar name="Anne" img={people3} />
       <AvatarImageList imgList={list} />
+      <AvatarImageList imgList={list2} />
       <AvatarList list={alist} />
     </>
   )
