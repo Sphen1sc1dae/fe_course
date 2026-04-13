@@ -14,4 +14,5 @@ createRoot(document.getElementById('root')).render(
   <StrictMode>
     <App />
   </StrictMode>,
+  // -> StrictMode 를 사용하게 되면 console 창에서 처음 '테스트' 작업을 거친 결과값을 출력시킨 후, 내부 동작을 수행한다.
 )
