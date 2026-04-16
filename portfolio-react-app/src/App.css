@@ -243,6 +243,10 @@ a.header-menu-item.active {
     gap: 1rem;
     margin: 2.5rem 0;
 }
+.category.active {
+    background-color: var(--color-accent);
+    color: var(--color-black);
+}
 .category {
     color: var(--color-white);
     padding: 0.5rem 3rem;

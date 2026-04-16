@@ -1,17 +1,18 @@
-import React from 'react';
+import React, { useState } from 'react';
 
-export default function Categories() {
-    const categories = [
-        {"category" : "ALL", "count" : "8"},
-        {"category" : "Front-end", "count" : "4"},
-        {"category" : "Back-end", "count" : "2"},
-        {"category" : "Mobile", "count" : "2"}
-    ]
+export default function Categories({categories}) {
+    const [category, setCategory] = useState("ALL");
     return (
         <ul className="categories">
-            { categories?.map((item, idx) => {
-                <li key={idx}><button className="category">{item.category}<span className="category-count">{item.count}</span></button></li>
-            }) }
+            { categories?.map((item, idx) => 
+                <li key={idx}>
+                    {
+                        category === item.category ? 
+                        <button className="category active" onMouseOver={() => setCategory(item.category)}>{item.category}<span className="category-count">{item.count}</span></button> : 
+                        <button className="category" onMouseOver={() => setCategory(item.category)}>{item.category}<span className="category-count">{item.count}</span></button>
+                    }
+                </li>
+            ) }
         </ul>
     );
 }

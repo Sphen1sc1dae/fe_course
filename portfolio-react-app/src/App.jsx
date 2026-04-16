@@ -22,7 +22,7 @@ export default function App() {
     <>
       <Header data={data?.header} />
       <Content data={data?.content}/>
-      <Footer />
+      <Footer data={data?.footer}/>
     </>
   )
 }

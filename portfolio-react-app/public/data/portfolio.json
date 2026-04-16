@@ -119,7 +119,36 @@
                     "description" : "Clone Coding with HTML, CSS"
                 }
             ]
-        }
+        },
+        "testimonials" : [
+            {
+                "img" : "images/testimonials/people1.webp",
+                "alt" : "people1",
+                "description" : "Lorem ipsum dolor sit amet consectetur adipisicing elit. Blanditiis, est libero dolores cumque quam accusamus deleniti tempore illum commodi maiores accusantium minima fugit iusto voluptate esse dignissimos voluptas amet culpa!",
+                "name" : "James Kim",
+                "company" : "Google"
+            },
+            {
+                "img" : "images/testimonials/people2.webp",
+                "alt" : "people2",
+                "description" : "Lorem ipsum dolor sit amet consectetur adipisicing elit. Blanditiis, est libero dolores cumque quam accusamus deleniti tempore illum commodi maiores accusantium minima fugit iusto voluptate esse dignissimos voluptas amet culpa!",
+                "name" : "Smith Park",
+                "company" : "Samsung"
+            },
+            {
+                "img" : "images/testimonials/people3.webp",
+                "alt" : "people3",
+                "description" : "Lorem ipsum dolor sit amet consectetur adipisicing elit. Blanditiis, est libero dolores cumque quam accusamus deleniti tempore illum commodi maiores accusantium minima fugit iusto voluptate esse dignissimos voluptas amet culpa!",
+                "name" : "Anna Lee",
+                "company" : "Google"
+            }
+        ]
     },
-    "footer":{}
+    "footer":{
+        "description" : "Junior Software Engineer Judy's Portfolio - All right reserved",
+        "list" : [
+            {"href" : "#","icon" : "github"},
+            {"href" : "#","icon" : "linkedin"}
+        ]
+    }
 }
