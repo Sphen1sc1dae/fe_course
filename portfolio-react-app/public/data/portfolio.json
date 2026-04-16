@@ -42,6 +42,83 @@
                     "period":"2010 Oct - 2019 Oct"
                 }
             ]
+        },
+        "skills": {
+            "description": "Lorem ipsum dolor, sit amet consectetur adipisicing elit.",
+            "coding": [
+                        { "title":"HTML",       "value": "98%", "width": "98%"},
+                        { "title":"CSS",        "value": "90%", "width": "90%"},
+                        { "title":"JavaScript", "value": "80%", "width": "80%"},
+                        { "title":"TypeScript", "value": "90%", "width": "90%"},
+                        { "title":"React",      "value": "88%", "width": "88%"},
+                        { "title":"Node.js",    "value": "75%", "width": "75%"}
+                    ],
+            "tools": [
+                        "Visual Studio Code",
+                        "IntelliJ",
+                        "Android Studio",
+                        "Eclipse",
+                        "MySQL Workbench"
+                    ],
+            "etc":  [ "Git", "Scrum Master", "SVN"]
+        },
+        "work" : {
+            "categories" : [
+                {"category" : "ALL", "count" : "8"},
+                {"category" : "Front-end", "count" : "4"},
+                {"category" : "Back-end", "count" : "2"},
+                {"category" : "Mobile", "count" : "2"}
+             ],
+            "projects" : [
+                {
+                    "img" : "images/projects/project1.webp",
+                    "alt" : "project_img",
+                    "title" : "Project#1",
+                    "description" : "Clone Coding with HTML, CSS"
+                },
+                {
+                    "img" : "images/projects/project2.webp",
+                    "alt" : "project_img",
+                    "title" : "Project#2",
+                    "description" : "Clone Coding with HTML, CSS"
+                },
+                {
+                    "img" : "images/projects/project3.webp",
+                    "alt" : "project_img",
+                    "title" : "Project#3",
+                    "description" : "Clone Coding with HTML, CSS"
+                },
+                {
+                    "img" : "images/projects/project4.webp",
+                    "alt" : "project_img",
+                    "title" : "Project#4",
+                    "description" : "Clone Coding with HTML, CSS"
+                },
+                {
+                    "img" : "images/projects/project5.webp",
+                    "alt" : "project_img",
+                    "title" : "Project#5",
+                    "description" : "Clone Coding with HTML, CSS"
+                },
+                {
+                    "img" : "images/projects/project6.webp",
+                    "alt" : "project_img",
+                    "title" : "Project#6",
+                    "description" : "Clone Coding with HTML, CSS"
+                },
+                {
+                    "img" : "images/projects/project7.webp",
+                    "alt" : "project_img",
+                    "title" : "Project#7",
+                    "description" : "Clone Coding with HTML, CSS"
+                },
+                {
+                    "img" : "images/projects/project8.webp",
+                    "alt" : "project_img",
+                    "title" : "Project#8",
+                    "description" : "Clone Coding with HTML, CSS"
+                }
+            ]
         }
     },
     "footer":{}

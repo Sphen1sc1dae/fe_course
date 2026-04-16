@@ -4,30 +4,21 @@ import SkillsTitle from './SkillsTitle.jsx';
 import SkillsCoding from './SkillsCoding.jsx';
 import SkillsTools from './SkillsTools.jsx';
 
-export default function SkillsContent() {
-    const tools=[
-        "Visual Studio Code",
-        "IntelliJ",
-        "Android Studio",
-        "Eclipse",
-        "MySQL Workbench"
-    ]
-    const etc = [ "Git", "Scrum Master", "SVN"]
+export default function SkillsContent({skills}) {
     return (
         <div className="skills">
             <Article style="skills-coding">
                 <SkillsTitle title="Coding Skills" />                 
-                <SkillsCoding />
+                <SkillsCoding list={skills?.coding}/>
             </Article>
             <Article style="skills-tools">
                 <SkillsTitle title="Tools" />                 
-                <SkillsTools list={tools} />
+                <SkillsTools list={skills?.tools} />
             </Article>
             <Article style="skills-etc">
                 <SkillsTitle title="Etc" />                 
-                <SkillsTools list={etc} />
+                <SkillsTools list={skills?.etc} />
             </Article>
         </div>
     );
 }
-
