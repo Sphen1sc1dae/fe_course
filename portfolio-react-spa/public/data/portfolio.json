@@ -2,7 +2,7 @@
     "header": {
         "logo": {
             "img": "images/favicon.ico",
-            "name": "Judy::SPA"
+            "name": "Judy"
         },
         "menus": [
             {"href": "/",   "style": "header-menu-item", "name": "Home"},
