@@ -1,10 +1,10 @@
 import React from 'react';
-import { SubTitle, Title } from '../commons/Titles';
-import Testimonial from './Testimonial';
+import { SubTitle, Title } from '../components/commons/Titles';
 import { useOutletContext } from 'react-router-dom';
+import Testimonial from '../components/content/Testimonial';
 
 export default function Testimonials() {
-    const data = useOutletContext();
+    const { data } = useOutletContext();
     return (
         <section id="testimonial" className="section container">
             <Title title= "Testimonials" />

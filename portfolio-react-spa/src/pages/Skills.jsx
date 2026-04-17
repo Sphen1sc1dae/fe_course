@@ -1,9 +1,9 @@
 import { useOutletContext } from "react-router-dom";
-import { Title, SubTitle, TitleDescription } from "../commons/Titles.jsx"
-import SkillsContent from "./SkillsContent.jsx";
+import { Title, SubTitle, TitleDescription } from "../components/commons/Titles.jsx";
+import SkillsContent from "../components/content/SkillsContent.jsx";
 
 export default function Skills() {
-    const data = useOutletContext();
+    const { data } = useOutletContext();
     return (
         <section id="skills" className="section container">
             <Title title="My Skills" />

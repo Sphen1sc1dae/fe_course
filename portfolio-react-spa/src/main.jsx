@@ -2,11 +2,11 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import App from './App.jsx'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
-import Home from './components/content/Home.jsx'
-import About from './components/content/About.jsx'
-import Skills from './components/content/Skills.jsx'
-import Work from './components/content/Work.jsx'
-import Testimonials from './components/content/Testimonials.jsx'
+import Home from './pages/Home.jsx'
+import About from './pages/About.jsx'
+import Skills from './pages/Skills.jsx'
+import Work from './pages/Work.jsx'
+import Testimonials from './pages/Testimonials.jsx'
 
 // router 객체 생성
 const router = createBrowserRouter(

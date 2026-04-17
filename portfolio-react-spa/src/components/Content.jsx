@@ -1,8 +1,8 @@
-import Home from "./content/Home.jsx"
-import About from "./content/About.jsx"
-import Skills from "./content/Skills.jsx"
-import Work from "./content/Work.jsx"
-import Testimonials from "./content/Testimonials.jsx"
+import Home from "../pages/Home.jsx"
+import About from "../pages/About.jsx"
+import Skills from "../pages/Skills.jsx"
+import Work from "../pages/Work.jsx"
+import Testimonials from "../pages/Testimonials.jsx"
 import ArrowTop from "./content/ArrowTop.jsx"
 
 export default function Content({ data }) {
