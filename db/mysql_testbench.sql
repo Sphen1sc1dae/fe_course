@@ -560,3 +560,260 @@ FROM
     employee
 WHERE
     dept_id = 'sys';
+    
+-- (3) max(숫자) : 최대값을 구하는 함수
+-- 사원테이블에서 가장 높은 급여를 받는 사원 조회
+use hrdb2019;
+select database();
+select concat(format(max(salary), 0), '만원') as 최고급여 from employee;
+
+-- (4) mix(숫자) : 최소값을 구하는 함수
+-- 사원테이블에서 가장 낮은 급여를 받는 사원 조회
+select concat(format(min(salary), 0), '만원') as 최소급여 from employee;
+    
+-- 사원들의 총급여, 평균급여, 최대급여, 최소급여를 조회
+-- 3자리 구분, 화폐단위 '만원' 추가
+-- 현재날짜 기준 급여컬럼이 null인 경우에는 0으로 치환
+select  concat(format(sum(ifnull(salary, 0)), 0), '만원') as 총급여,
+		concat(format(avg(ifnull(salary, 0)), 0), '만원') as 평균급여,
+		concat(format(max(ifnull(salary, 0)), 0), '만원') as 최대급여,
+		concat(format(min(ifnull(salary, 0)), 0), '만원') as 최소급여
+	from employee;
+
+-- (5) count(컬럼) : 조건에 맞는 데이터의 row 수를 조회, null은 제외
+-- 사원테이블의 전체 로우수
+select count(*) from employee; 		-- 20
+select count(salary) from employee; -- 19
+select count(emp_id) from employee; -- 20
+
+-- 재직중인 사원수 조회 : 16
+select count(*)
+	from employee
+    where retire_date is null;
+
+select  count(*) - count(retire_date) as '재직자',
+		count(retire_date) as '퇴사자'
+		from employee;
+
+-- 퇴사한 사원수 조회	
+select count(retire_date) from employee;
+    
+-- '2015년'에 입사한 사원수 조회
+select count(*)
+	from employee
+    where left(hire_date, 4) = '2015';
+
+-- 정보시스템(SYS) 부서의 사원수 조회
+select count(*)
+	from employee
+    where dept_id = 'sys';
+    
+-- 가장 빠른 입사자, 가장 늦은 입사자의 입사일을 조회    
+select  min(hire_date), 
+		max(hire_date)
+	from employee;
+
+-- 가장 빠른 입사자의 정보 조회
+select *
+	from employee
+    where hire_date  = '2013-01-01';
+
+select *
+	from employee
+    where hire_date  = (select min(hire_date) from employee);
+
+-- [group by] : ~별, 부서별 사원수, 입사날짜별 총급여.. 
+-- 그룹함수와 일반컬럼은 함께 사용 불가, 사용을 하려면 일반컬럼을 group by로 그룹핑 진행
+-- 단, group by 대상인 일반 컬럼은 그룹핑이 가능해야함
+select count(salary), salary  
+	from employee
+    group by salary;  -- salary 데이터를 그룹핑한 후 count(salary) 적용
+    
+-- 부서별 사원수, 총급여, 평균급여 조회
+-- null은 0으로 치환
+-- 3자리 구분, 소수점 절삭
+select 	dept_id as 부서ID, 
+		count(*) as 사원수, 
+        format(sum(ifnull(salary,0)), 0) as 총급여, 
+        format(floor(avg(ifnull(salary,0))), 0) as 평균급여,
+        format(max(ifnull(salary,0)), 0) as 최대급여,
+        format(min(ifnull(salary,0)), 0) as 최소급여
+	from employee
+    group by dept_id;
+
+-- 입사년도별, 사원수, 총급여, 평균급여, 최대급여, 최소급여 조회
+-- 소수점 X, 3자리 구분
+select 	left(hire_date, 4) as '입사년도', 
+		count(*) as '사원수',
+        format(sum(salary), 0) as '총급여',
+        format(truncate(avg(salary), 0), 0) as '평균급여',
+        format(max(salary), 0) as '최대급여',
+        format(min(salary), 0) as '최소급여'
+	from employee
+    group by left(hire_date, 4);
+
+-- [having 조건절] 그룹함수 또는 group by 결과에 대한 조건을 정의 
+-- 부서별 총급여 조회
+-- 총급여가 30000 이상인 부서만 출력
+select 	dept_id, 
+		sum(ifnull(salary, 0)) as '총급여'
+	from employee    
+    group by dept_id
+    having sum(ifnull(salary, 0)) >= 30000;
+    -- having '총급여' >= 30000;  
+
+-- 연도별, 사원수, 총급여, 평균급여, 최대급여, 최소급여 조회
+-- 소수점 X, 3자리 구분
+-- 총급여가 30000 이상인 년도 출력
+-- 급여 협상이 안된 사원은 제외
+select 	left(hire_date, 4) as '입사년도', 
+		count(*) as '사원수',
+        format(sum(salary), 0) as '총급여',
+        format(truncate(avg(salary), 0), 0) as '평균급여',
+        format(max(salary), 0) as '최대급여',
+        format(min(salary), 0) as '최소급여'
+from employee
+where salary is not null
+group by left(hire_date, 4)
+having sum(salary) > 30000;
+
+-- [rollup 함수] 리포팅을 위한 함수
+-- 부서별 사원수, 총급여, 평균급여 조회
+select  dept_id as '부서ID',
+		count(*) as '사원수',
+		sum(ifnull(salary, 0)) as '총급여',
+        floor(avg(ifnull(salary, 0))) as '평균급여'
+from employee
+group by dept_id with rollup;
+
+-- rollup한 결과의 부서아이디를 추가
+select  if(grouping(dept_id), '총합계', ifnull(dept_id, '-')) as dept_id,
+		count(*) as '사원수',
+		sum(ifnull(salary, 0)) as '총급여',
+        floor(avg(ifnull(salary, 0))) as '평균급여'
+from employee
+group by dept_id with rollup;
+
+-- 연도별, 사원수, 총급여, 평균급여, 최대급여, 최소급여 조회, rollup 함수 적용
+-- 💥‼ grouping 함수안에는 함수를 넣을수 없음,
+-- 💥if(grouping(left(hire_date, 4)), '총합계', ifnull(left(hire_date, 4), '-')) as hire_date,
+select 	if(grouping(year), '총합계', ifnull(year, '-')) as hire_date,
+		count(*) as '사원수',
+        format(sum(salary), 0) as '총급여',
+        format(truncate(avg(salary), 0), 0) as '평균급여',
+        format(max(salary), 0) as '최대급여',
+        format(min(salary), 0) as '최소급여'
+from employee,
+	 (select emp_id, left(hire_date, 4) year
+		from employee) T1
+where employee.emp_id = T1.emp_id and salary is not null
+group by year with rollup;
+
+-- [limit 함수] 출력갯수를 제한하여 조회
+-- 오라클의 rownum 함수와 동일
+
+-- 전체 사원 리스트 중 상위 5개만 출력
+select * from employee limit 5;
+
+-- 최대 급여를 받는 사원을 순서대로 3명 조회
+SELECT 
+    *
+FROM
+    employee
+ORDER BY salary DESC
+LIMIT 3;
+
+/******************************************************
+	조인(JOIN) : 두 개이상의 테이블을 연동하여 하나의 데이셋 구성
+    ERD(Entity Relationship Diagram): 데이터베이스 설계도(구조도)
+    
+    ** ANSI SQL : 데이터베이스 시스템들의 표준 SQL **
+    ** 조인(JOIN) 종류 **
+    (1) CROSS JOIN(CATEISIAN:카테이션) - 합집합
+        : 테이블의 데이터 전체를 조인 
+        예) 테이블1(10개) * 테이블2(10개) = 100개
+	(2) INNER JOIN(EQUI) - 교집합
+		: 두 개이상의 테이블들이 조인연결고리를 통해 조인 실행
+	(3) OUTER JOIN - INNER JOIN + 조인에서 제외한 ROW 포함
+		LEFT OUTER JOIN - 왼쪽의 테이블의 ROW 포함
+        RIGHT OUTER JOIN - 오른쪽 테이블의 ROW 포함
+	(4) SELF JOIN - 한(자신) 테이블을 두 개(자신, 사본)의 테이블처럼 조인 
+🍿 형식2 = ORACLE 형식
+******************************************************/
+-- [cross join]
+-- 형식1 > SELECT [컬럼리스트]
+-- 	FROM [테이블1] CROSS JOIN [테이블2]
+-- 	WHERE [조건절] 
+-- 형식2 (Oracle 형식) > SELECT [컬럼리스트]
+-- 	FROM [테이블1], [테이블2]
+-- 	WHERE [조건절] 
+
+-- employee, department cross join
+select count(*) from employee;
+select count(*) from department;
+select count(*) from unit;
+select count(*) from employee cross join department;
+select count(*) from employee cross join department cross join unit;
+select * from employee cross join department cross join unit;
+select count(*) from employee, department;
+
+-- 사원, 휴가, 부서 테이블을 cross join
+select count(*) from employee cross join vacation cross join department;
+
+-- [INNER JOIN(EQUI JOIN)]
+-- 형식1 > SELECT [컬럼리스트]
+-- 	FROM [테이블1] INNER JOIN [테이블2]
+-- 		ON [테이블1.조인컬럼] = [테이블2.조인컬럼]
+-- 형식2 > SELECT [컬럼리스트]
+-- 	FROM [테이블1], [테이블2]
+-- 	WHERE [테이블1.조인컬럼] = [테이블2.조인컬럼]
+
+SELECT 
+    COUNT(*)
+FROM
+    employee
+        INNER JOIN
+    department ON employee.dept_id = department.dept_id;
+-- Oracle 형식    
+select count(*) from employee, department where employee.dept_id = department.dept_id;
+
+-- 사원테이블, 부서테이블, 본부테이블 inner join
+select * from employee inner join department on employee.dept_id = department.dept_id inner join unit on department.unit_id = unit.unit_id;
+select * from employee e inner join department d on e.dept_id = d.dept_id inner join unit u on d.unit_id = u.unit_id;
+-- -> 오라클 형식도 유사한 방법
+
+-- 모든 사원들의 사원번호, 사원명, 부서아이디, 부서명, 입사일, 급여를 조회
+SELECT 
+    emp_id, emp_name, e.dept_id, dept_name, hire_date, salary
+FROM
+    employee e
+        INNER JOIN
+    department d ON e.dept_id = d.dept_id;
+
+-- 영업부에 속한 사원들의 사원명, 입사일, 퇴사일, 급여, 부서아이디, 부서명을 조회
+-- 재직중인 사원은 현재 날짜로 출력
+SELECT 
+    emp_name,
+    hire_date,
+    IFNULL(retire_date, CURDATE()) AS retire_date,
+    salary,
+    d.dept_id,
+    dept_name
+FROM
+    employee e,
+    department d
+WHERE
+    e.dept_id = d.dept_id
+        AND d.dept_name = '영업';
+        
+-- '2015'년도에 입사자들의 사번, 사원명, 입사일, 부서명, 본부아이디, 본부명을 조회
+SELECT 
+    emp_id, emp_name, hire_date, dept_name, u.unit_id, unit_name
+FROM
+    employee e,
+    department d,
+    unit u
+WHERE
+    e.dept_id = d.dept_id
+        AND d.unit_id = u.unit_id
+        AND LEFT(e.hire_date, 4) = '2015';
