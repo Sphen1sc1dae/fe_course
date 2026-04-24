@@ -1100,3 +1100,229 @@ select * from employee where hire_date = (select max(hire_date) from employee);
 
 -- 가장 먼저 퇴사한 사원 정보 조회
 select * from employee where retire_date = (select min(retire_date) from employee);
+
+-- [서브쿼리 : 단일행]
+-- 가장 많은 휴가를 사용한 사원이 속한 부서의 모든 사원들을 조회
+SELECT 
+    *
+FROM
+    employee
+WHERE
+    dept_id = (SELECT 
+            dept_id
+        FROM
+            employee
+        WHERE
+            emp_id = (SELECT 
+                    emp_id
+                FROM
+                    vacation
+                ORDER BY duration DESC
+                LIMIT 1));
+
+-- 이렇게도 표현
+select * from employee where dept_id = (select distinct e.dept_id from employee e, vacation v where e.emp_id = v.emp_id and e.emp_id = (select v.emp_id from vacation order by duration desc limit 1));
+
+-- [서브쿼리 : 다중행 - IN, EXITST ..]
+-- '제3본부'에 속한 모든 사원 정보 조회
+-- dept_id 가 2개인데(ADV, MKT) 그 중 하나인 ADV 에 사원 정보가 없어서 결과는 MKT 에 대한 컬럼만 출력
+SELECT 
+    *
+FROM
+    employee
+WHERE
+    dept_id IN (SELECT 
+            dept_id
+        FROM
+            department
+        WHERE
+            unit_id IN (SELECT 
+                    unit_id
+                FROM
+                    unit
+                WHERE
+                    unit_name = '제3본부'));
+                    
+SELECT dept_id FROM department WHERE unit_id IN (SELECT unit_id FROM unit WHERE unit_name = '제3본부');
+
+-- '제3본부'에 속한 모든 사원의 휴가 사용 정보 조회
+SELECT 
+    *
+FROM
+    vacation
+WHERE
+    emp_id IN (SELECT 
+            emp_id
+        FROM
+            employee
+        WHERE
+            dept_id IN (SELECT 
+                    dept_id
+                FROM
+                    department
+                WHERE
+                    unit_id = (SELECT 
+                            unit_id
+                        FROM
+                            unit
+                        WHERE
+                            unit_name = '제3본부')));
+                            
+-- 휴가를 한 번이라도 사용한 모든 사원 조회
+select * from employee e where exists (select 1 from vacation v where e.emp_id = v.emp_id);
+
+-- [인라인뷰 : 메인쿼리의 테이블 자리에 들어가는 쿼리 형식]
+-- 사원별 휴가사용 일수를 그룹핑하여, 사원번호, 사원명, 입사일, 급여, 휴가사용일수를 조회
+select emp_id, sum(duration) as count from vacation group by emp_id;
+select
+ e.emp_id, emp_name, hire_date, salary, vac.count as '휴가사용일수' 
+	from employee e, (select emp_id, sum(duration) as count from vacation group by emp_id) vac 
+	where e.emp_id = vac.emp_id;
+    
+-- ANSI SQL
+select
+ e.emp_id, emp_name, hire_date, salary, vac.count as '휴가사용일수' 
+	from employee e inner join (select emp_id, sum(duration) as count from vacation group by emp_id) vac 
+	on e.emp_id = vac.emp_id;
+    
+-- [휴가를 사용한 사원 + 사용하지 않은 사원 포함]
+-- 사원별 휴가사용 일수를 그룹핑하여, 사원번호, 사원명, 입사일, 급여, 휴가사용일수를 조회
+-- 휴가를 사용하지 않은 사원의 휴가사용일수는 0
+-- 휴가사용일수는 내림차순 정렬
+SELECT 
+    e.emp_id,
+    e.emp_name,
+    e.hire_date,
+    e.salary,
+    IFNULL(v.count, 0) AS count
+FROM
+    employee e
+        LEFT OUTER JOIN
+    (SELECT 
+        emp_id, SUM(duration) AS count
+    FROM
+        vacation
+    GROUP BY emp_id
+    ORDER BY SUM(duration) DESC) v ON e.emp_id = v.emp_id;
+    
+-- '2015' ~ '2017'년도 입사한 사원들의 휴가사용 일수 조회
+select emp_id, sum(duration) as count from vacation group by emp_id;
+select * from employee where left(hire_date, 4) between '2015' and '2017';
+
+SELECT 
+    t2.emp_id,
+    t2.emp_name,
+    t2.hire_date,
+    IFNULL(t1.count, 0) AS count
+FROM
+    (SELECT 
+        emp_id, SUM(duration) as count
+    FROM
+        vacation
+    GROUP BY emp_id) t1
+        RIGHT OUTER JOIN
+    (SELECT 
+        *
+    FROM
+        employee
+    WHERE
+        LEFT(hire_date, 4) BETWEEN '2015' AND '2017') t2 ON t1.emp_id = t2.emp_id
+ORDER BY count DESC;
+
+-- 1) 부서별 총급여, 평균급여를 조회
+select dept_id, sum(ifnull(salary, 0)) sum, floor(avg(ifnull(salary, 0))) avg from employee group by emp_id;
+
+-- 2) 부서테이블과 조인하여 모든 부서의 총급여, 평균급여 출력
+SELECT 
+    d.dept_id,
+    d.dept_name,
+    IFNULL(d.unit_id, 0) AS unit_id,
+    d.start_date,
+    IFNULL(t1.sum, 0) AS sum,
+    IFNULL(t1.avg, 0) AS avg
+FROM
+    department d
+        LEFT OUTER JOIN
+    (SELECT 
+        dept_id,
+            SUM(IFNULL(salary, 0)) sum,
+            FLOOR(AVG(IFNULL(salary, 0))) avg
+    FROM
+        employee
+    GROUP BY emp_id) t1 ON d.dept_id = t1.dept_id;
+    
+-- 3) 사원테이블을 조인하여 사원명, 급여, 부서아이디, 부서명, 총급여, 평균급여 조회
+SELECT 
+    e.emp_name, e.salary, e.dept_id, dd.dept_name, dd.sum, dd.avg
+FROM
+    employee e
+        INNER JOIN
+    (SELECT 
+        d.dept_id,
+            d.dept_name,
+            IFNULL(d.unit_id, 0) AS unit_id,
+            d.start_date,
+            IFNULL(t1.sum, 0) AS sum,
+            IFNULL(t1.avg, 0) AS avg
+    FROM
+        department d
+    LEFT OUTER JOIN (SELECT 
+        dept_id,
+            SUM(IFNULL(salary, 0)) sum,
+            FLOOR(AVG(IFNULL(salary, 0))) avg
+    FROM
+        employee
+    GROUP BY emp_id) t1 ON d.dept_id = t1.dept_id) dd ON e.dept_id = dd.dept_id;
+    
+-- [스칼라서브쿼리 : 컬럼리스트에 사용하는 서브쿼리 형식] -> 권장 X 매우 비효율
+-- 정보시스템(SYS) 부서의 사원정보 출력
+-- 정보시스템 부서의 총급여, 평균급여 함께 출력
+SELECT 
+    emp_id,
+    emp_name,
+    dept_id,
+    salary,
+    (SELECT 
+            FLOOR(SUM(salary))
+        FROM
+            employee
+        WHERE
+            dept_id = 'SYS') AS '총급여',
+    (SELECT 
+            FLOOR(AVG(salary))
+        FROM
+            employee
+        WHERE
+            dept_id = 'SYS') AS '평균급여'
+FROM
+    employee
+WHERE
+    dept_id = 'SYS';
+select floor(sum(salary)) from employee where dept_id = 'SYS';
+select floor(avg(salary)) from employee where dept_id = 'SYS';
+
+/******************************************************
+	테이블 결고 합치기 : union, union all
+    형식> 쿼리1 실행 결과
+		UNION => 중복 제거
+        쿼리2 실행 결과
+	형식> 쿼리1 실행 결과
+		UNION ALL => 중복 허용
+        쿼리2 실행 결과
+	😎 쿼리1, 쿼리2의 실행 컬럼의 타입과 이름이 같아야 한다.
+******************************************************/
+-- 영업(MKT), 정보시스템(SYS) 부서의 사원아이디, 사원명, 급여, 부서아이디 조회
+-- union을 사용하여 실행결과 합치기
+select emp_id, emp_name, salary, dept_id from employee where dept_id = 'MKT'
+union
+select emp_id, emp_name, salary, dept_id from employee where dept_id = 'SYS'
+union
+select emp_id, emp_name, salary, dept_id from employee where dept_id = 'MKT';
+
+-- 영업(MKT), 정보시스템(SYS) 부서의 사원아이디, 사원명, 급여, 부서아이디 조회
+-- union all을 사용하여 실행결과 합치기
+select emp_id, emp_name, salary, dept_id from employee where dept_id = 'MKT'
+union all
+select emp_id, emp_name, salary, dept_id from employee where dept_id = 'SYS'
+union all
+select emp_id, emp_name, salary, dept_id from employee where dept_id = 'MKT';
