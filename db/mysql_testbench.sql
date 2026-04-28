@@ -1667,7 +1667,7 @@ desc emp;
 alter table emp add column phone char(13);
 select * from emp;
 
--- emp 테이블에 phone컬럼 크기 20으로 변경, 크기 증가시 정상실행.
+-- emp 테이블에 phone컬럼 크기 20으로 변경, 크기 증가시 정상실행. column 은 생략 가능
 alter table emp modify column phone char(20);
 
 -- ename 컬럼에 데이터가 존재하는 경우.
@@ -1737,3 +1737,267 @@ select retire_date from emp2;
 
 -- retire_date를 'not null' 제약 정의
 alter table emp2 modify retire_date date not null;
+
+-- '정보시스템' 부서의 모든 사원 급여를 20% 증가
+select dept_id from department where dept_name = '정보시스템';
+update copy_emp set salary = salary + salary * 0.2 where dept_id = (select dept_id from department where dept_name = '정보시스템');
+select * from copy_emp;
+
+-- 'S0003'인 강우동 사원의 영어이름을 'kang', 입사일은 현재날짜, 부서를 MKT 로 변경
+select * from copy_emp where emp_id = 'S0003';
+UPDATE copy_emp 
+SET 
+    eng_name = 'kang',
+    hire_date = CURDATE(),
+    dept_id = 'MKT'
+WHERE
+    emp_id = 'S0003';
+    
+-- 트랜잭션별 업데이트 정의
+-- 트랜잭션 관리 명령어 DTL : commit(작업완료), rollback(작업복원)
+-- DML 명령어에 영향을 줌, DDL은 관리방식에 상관없이 무조건 autocommit
+select @@autocommit; -- 현재 트랜잭션 방식 확인 1, 시스템에서 자동 트랜잭션 관리
+
+set autocommit = 0; -- 트랜잭션 관리 방식을 수동 전환
+set autocommit = 1; -- 트랜잭션 관리 방식을 자동 전환
+
+select * from emp;
+commit; -- 새로운 트랜잭션 시작
+
+-- 홍길동의 급여를 3000 으로 수정
+update emp set salary = 3000 where ename = '홍길동'; -- > 실제 DB 에 반영 전 - commit 수동 작업
+
+rollback; -- > commit 전 까지 반영되었던 작업을 다시 되돌림.
+
+update emp set salary = 3000 where ename = '이순신'; -- > 실제 DB 에 반영 전 - commit 수동 작업
+commit;
+
+/***************************************************************
+	데이터 삭제 : DELETE
+	형식> DELETE FROM [테이블명]
+        WHERE [조건절]
+	!! MySQL은 UPDATE 권한 변경 후 진행
+    => SET SQL_SAFE_UPDATES = 0(허용) / 1(불가);
+***************************************************************/
+select @@sql_safe_updates; -- 업데이트 모드 해제
+select @@autocommit; -- 수동으로 트랜잭션 관리
+commit;
+
+-- emp 테이블의 이순신, 홍길동 사원 삭제
+select * from emp;
+delete from emp where eid in('S002', 'S001');
+rollback;
+commit;
+
+select * from emp;
+
+-- emp 테이블의 모든 사원 삭제, truncate 명령어 사용
+truncate table emp; -- > truncate table 명령은 ddl 이므로 autocommit 됨.
+rollback;
+select * from emp;
+commit;
+
+/***************************************************************
+	제약사항(Constraints) : 데이터 무결성 원칙을 적용하기 위한 규칙
+    - Unique 제약사항 : 중복을 방지하는 제약
+    - Not null 제약사항 : null 값을 허용하지 않는 제약
+    - Primary 제약사항 : Unique + Not null, Auto-increment 함께 사용
+    - Foreign 제약사항 : 타 테이블의 기본키를 참조하는 제약,
+						기본키와 참조하는 컬럼은 데이터타입이 동일해야함
+	- Default 제약사항 : 데이터 입력 시 기본으로 저장되는 데이터를 정의하는 제약
+    
+    ** 제약사항은 테이블 생성시, 테이블 수정시 정의할 수 있음;
+***************************************************************/
+select @@sql_safe_updates; -- 업데이트 모드 해제 허용(0) / 불가 (1)
+select @@autocommit; -- 수동(0) / 자동(1) 으로 트랜잭션 관리
+
+-- 제약사항 확인
+desc employee;
+select * from information_schema.table_constraints where table_schema = 'hrdb2019';
+
+-- emp_const 테이블 생성, 기본키 제약(Primary), 참조키 제약(Foreign), not null
+CREATE TABLE emp_const (
+    emp_id CHAR(4) PRIMARY KEY,
+    emp_name VARCHAR(5) NOT NULL,
+    hire_date DATE,
+    salary INT
+);
+select * from information_schema.tables where table_name = 'emp_const';
+desc emp_const;
+
+CREATE TABLE emp_const2 (
+    emp_id CHAR(4),
+    emp_name VARCHAR(5) NOT NULL,
+    hire_date DATE,
+    salary INT
+);
+select * from information_schema.tables where table_name = 'emp_const';
+desc emp_const2;
+
+--
+insert into emp_const(emp_id, emp_name, hire_date, salary) values('S001', '홍길동', curdate(), 1000);
+insert into emp_const2(emp_id, emp_name, hire_date, salary) values('S001', '홍길동', curdate(), 1000);
+
+select * from emp_const1;
+select * from emp_const2;
+
+CREATE TABLE emp_const3 (
+    emp_id CHAR(4),
+    emp_name VARCHAR(5) NOT NULL,
+    hire_date DATE,
+    salary INT,
+    CONSTRAINT pk_emp_const3_emp_id PRIMARY KEY (emp_id)
+);
+desc emp_const3;
+select * from information_schema.table_constraints where table_name = 'emp_const3';
+
+select * from information_schema.table_constraints where table_name = 'hrdb2019';
+
+/***************************************************************
+	제약사항 추가/수정/삭제
+    형식> ALTER TABLE [테이블명]
+		ADD CONSTRAINT [제약사항명] 제약사항(컬럼)
+		MODIFY CONSTRAINT [제약사항명] 제약사항(컬럼)
+        DROP (CONSTRAINT) [제약사항명]
+	😎 제약사항은 삭제후 재정의 하는것을 원칙으로 한다.
+***************************************************************/
+-- emp_const 테이블의 제약사항 확인
+select * from information_schema.table_constraints where table_name = 'emp_const';
+desc emp_const;
+
+-- emp_const 테이블에 phone 컬럼 추가, char(13)
+alter table emp_const add column phone char(13);
+select * from emp_const;
+
+-- phone 컬럼에 '010-1111-1234' 삽입
+update emp_const set phone = '010-1111-1234';
+
+-- phone 컬럼에 default 제약사항 추가 '010-1111-1234' 수정
+alter table emp_const modify phone char(13) default '010-1111-1234';
+desc emp_const; -- not null, default, check(?) 제약 확인
+select * from information_schema.table_constraints where table_name = 'emp_const'; -- pk, fk 확인
+
+--
+select * from emp_const;
+insert into emp_const(emp_id, emp_name, hire_date) values('S003', '홍길동', now());
+
+-- salary 컬럼에 default 제약 추가 기본값 : 1000
+alter table emp_const modify salary int default 1000;
+desc emp_const;
+
+-- hire_date 컬럼에 default 제약 추가 curdate() 함수 사용 불가, '년-월-일'
+alter table emp_const modify hire_date date default '2026-01-01';
+desc emp_const;
+
+insert into emp_const(emp_id, emp_name) values('S004', '김유신');
+
+-- check 제약 : mysql 8.0(+)
+desc emp_const;
+desc emp_const3;
+
+-- emp_const3 테이블의 hire_date 컬럼은 default 제약 추가, '2026-04-01' salary 컬럼은 not null 제약 변경
+select * from emp_const3;
+alter table emp_const3 modify hire_date date default '2026-04-01';
+alter table emp_const3 modify salary int not null;
+
+desc emp_const3;
+
+-- salary 값 입력시 '3000' 이상인 값만 저장되도록 check 제약사항 추가
+alter table emp_const3 add constraint chk_emp_const3_salary check (salary >= 3000);
+
+select * from information_schema.table_constraints where table_name = 'emp_const3';
+
+select * from emp_const3;
+insert into emp_const3(emp_id, emp_name, salary) values('S001', '홍길동', 4000);
+
+-- emp_const3 테이블에 emp_name 컬럼에 unique 제약 추가
+select * from information_schema.table_constraints where table_name = 'emp_const3';
+
+select * from information_schema.key_column_usage where table_name = 'emp_const3';
+
+alter table emp_const3 add constraint un_emp_const3_emp_name unique(emp_name);
+
+select * from emp_const3;
+insert into emp_const3 values('S002', '홍길동', curdate(), 3000); -- 똑같은 이름은 unique 제약에 걸림!
+insert into emp_const3 values('S002', '김유신', curdate(), 3000);
+
+--
+desc emp_const2;
+select * from emp_const2;
+-- emp_const2 데이터 삭제
+delete from emp_const2;
+
+-- emp_id 기본키 제약 추가
+alter table emp_const2 add constraint pk_emp_const2_emp_id primary key(emp_id);
+
+desc emp_const2;
+select * from information_schema.table_constraints where table_name = 'emp_const2';
+
+select * from emp_const2;
+-- dept_id 컬럼 추가 char(3), not null 제약 추가
+alter table emp_const2 add column dept_id char(3) not null;
+
+-- department를 복제하여 department2 테이블 생성
+create table department2 as select * from department;
+
+desc department;
+desc department2;
+select * from department2;
+
+-- dept_id 컬럼에 기본키 제약 추가
+alter table department2 add constraint pk_department2_dept_id primary key(dept_id);
+
+select * from information_schema.table_constraints where table_name = 'department2';
+select * from information_schema.key_column_usage where table_name = 'department2';
+
+-- emp_const2 테이블의 dept_id 컬럼 참조 제약 추가 --> department2의 dept_id
+desc emp_const2; -- did
+desc department2; -- dept_id
+ 
+-- 컬럼명 변경
+alter table emp_const2 rename column dept_id to did;
+
+-- emp_const2의 did(부서아이디) 컬럼에 참조키 제약 추가
+alter table emp_const2 add constraint fk_emp_const2_did foreign key(did) references department2(dept_id);
+select * from information_schema.table_constraints where table_name = 'emp_const2';
+
+select * from emp_const2;
+insert into emp_const2(emp_id, emp_name, did) values('S001', '홍길동', 'SYS');
+insert into emp_const2(emp_id, emp_name, did) values('S002', '김유신', 'ACC');
+
+select * from emp_const2;
+
+-- department2 테이블의 SYS 부서 삭제한다면... emp_const2에서 참조하므로, 삭제불가!!
+-- (1) emp_const2 테이블의 SYS 참조 행을 삭제
+-- (2) department2 테이블의 SYS 데이터 삭제 가능
+delete from department2 where dept_id = 'SYS';
+
+-- (1)
+delete from emp_const2 where did = 'SYS';
+select * from emp_const2;
+
+-- (2)
+delete from department2 where dept_id = 'SYS';
+select * from department2;
+
+-- 참조하는 부모테이블의 컬럼이 변화함에 따라 자식도 함께 적응받도록 옵션 정의
+-- ON [DELETE / UPDATE] CASCADE; 참조키 제약 정의시 마지막에 추가
+select * from information_schema.table_constraints where table_name = 'emp_const2';
+
+-- emp_const2 테이블의 참조키 제약 삭제
+ALTER TABLE emp_const2 DROP FOREIGN KEY fk_emp_const2_did;
+-- alter table emp_const2 drop constraint fk_emp_const2_did; -> 버전 문제로 약간 변형
+
+-- emp_const2 테이블의 참조키 제약 정의, on delete/update cascasde 추가
+alter table emp_const2 add constraint fk_emp_const2_did foreign key(did) references department2(dept_id) on delete cascade on update cascade;
+
+desc emp_const2;
+select * from information_schema.key_column_usage where table_name = 'emp_const2';
+
+select * from emp_const2;
+
+-- department2의 'ACC' 부서를 'ABC' 부서로 수정
+update department2 set dept_id = 'ABC' where dept_id = 'ACC';
+
+-- department2의 'ABC' 부서를 삭제
+delete from department2 where dept_id = 'ABC';
